@@ -1,0 +1,5 @@
+{
+  "name": "Personal Finance Tracker",
+  "description": "A comprehensive React application to manage personal income and expenses, track finances across multiple accounts, and visualize financial data through an intuitive dashboard.",
+  "requestFramePermissions": []
+}
