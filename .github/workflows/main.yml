@@ -1,0 +1,46 @@
+# Tên của workflow, sẽ hiển thị trong tab "Actions" trên GitHub
+name: Deploy to GitHub Pages
+
+# Kích hoạt workflow này mỗi khi có push lên branch "main"
+on:
+  push:
+    branches:
+      - main
+
+# Cấp quyền cho workflow để có thể ghi vào repository (để đẩy lên branch gh-pages)
+permissions:
+  contents: write
+
+# Định nghĩa các công việc (jobs) cần chạy
+jobs:
+  build-and-deploy:
+    # Chạy trên một máy ảo Ubuntu mới nhất
+    runs-on: ubuntu-latest
+
+    # Các bước (steps) thực thi tuần tự
+    steps:
+      # Bước 1: Lấy mã nguồn của bạn từ repository về máy ảo
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      # Bước 2: Cài đặt môi trường Node.js (phiên bản 20)
+      - name: Setup Node.js 🟩
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm' # Bật cache để tăng tốc các lần chạy sau
+
+      # Bước 3: Cài đặt các dependencies từ package.json
+      - name: Install dependencies 📦
+        run: npm install
+
+      # Bước 4: Build dự án
+      - name: Build project 🏗️
+        run: npm run build
+
+      # Bước 5: Deploy kết quả từ thư mục "dist" lên branch "gh-pages"
+      - name: Deploy to GitHub Pages 🚀
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist # Thư mục chứa kết quả build
